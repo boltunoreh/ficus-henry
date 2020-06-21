@@ -1,0 +1,23 @@
+{
+  "name": "ficus-henry",
+  "version": "1.0.0",
+  "description": "Ficus Henry creativity guid",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boltunoreh/ficus-henry.git"
+  },
+  "author": "Pavel Alazankin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/boltunoreh/ficus-henry/issues"
+  },
+  "homepage": "https://github.com/boltunoreh/ficus-henry#readme",
+  "dependencies": {
+    "micro": "^9.3.4"
+  }
+}
