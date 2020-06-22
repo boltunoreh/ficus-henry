@@ -19,5 +19,8 @@
   "homepage": "https://github.com/boltunoreh/ficus-henry#readme",
   "dependencies": {
     "micro": "^9.3.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
