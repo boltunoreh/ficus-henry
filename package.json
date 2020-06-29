@@ -2,9 +2,12 @@
   "name": "ficus-henry",
   "version": "1.0.0",
   "description": "Ficus Henry creativity guid",
-  "main": "index.js",
+  "main": "dist/src/index.js",
   "scripts": {
-    "start": "micro",
+    "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,6 +25,12 @@
     "mongodb": "^3.5.9"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "@types/express": "^4.17.6",
+    "@types/mongodb": "^3.5.25",
+    "@types/mongoose": "^5.7.28",
+    "@types/node": "^14.0.14",
+    "nodemon": "^2.0.4",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.5"
   }
 }
