@@ -9,11 +9,6 @@ const requestProcessorFactory = new RequestProcessorFactory();
 
 Db.connect();
 
-/*
-    todo add YandexResponse class
-    todo add logging transport
- */
-
 app.post("/", jsonParser, async (req, res) => {
     const yandexRequest = new YandexRequest(req);
 
