@@ -1,25 +1,31 @@
-import {YandexRequest} from "../dto/yandex-request";
-import {AbstractSongRequestProcessor, IRequestProcessor} from "./abstract-request-processor";
+import {AbstractSongRequestProcessor} from "./abstract-request-processor";
+import {YandexRequest} from "../model/yandex-request";
+import {ButtonTitleEnum} from "../types/enums";
 
 export class SongListIntentRequestProcessor extends AbstractSongRequestProcessor {
     async process(yandexRequest: YandexRequest) {
+        let sessionState = {};
         const songNames = await this.songRepository.getAllSongNames();
 
         let buttons = [];
 
         for (let i = 0; i < songNames.length; i++) {
-            buttons.push({
-                title: songNames[i],
-                hide: true
-            });
+            buttons.push(songNames[i]);
         }
 
-        buttons.push({title: 'Напомнить аккорды', hide: true}, {title: 'Зачитать текст', hide: true});
+        buttons.push(ButtonTitleEnum.SONG_CHORDS, ButtonTitleEnum.SONG_TEXT);
+
+        if (yandexRequest.sessionState.infoType) {
+            sessionState = {
+                infoType: yandexRequest.sessionState.infoType
+            }
+        }
 
         return this.createResponse(
             songNames.join(', '),
             '',
-            buttons
+            buttons,
+            sessionState
         );
     }
 }

@@ -1,28 +1,23 @@
 import express from 'express';
 import {Db} from './db-init';
-import {YandexRequest} from "./dto/yandex-request";
-import {RequestProcessorFabric} from "./request-processor/request-processor-fabric";
+import {RequestProcessorFactory} from "./request-processor-factory";
+import {YandexRequest} from "./model/yandex-request";
 
 const app = express();
 const jsonParser = express.json();
-const requestProcessorFabric = new RequestProcessorFabric();
+const requestProcessorFactory = new RequestProcessorFactory();
 
 Db.connect();
 
 /*
-    todo show chords line by line
-    todo add band photos 
-    todo add YandexResponse class 
+    todo add YandexResponse class
+    todo add logging transport
  */
 
 app.post("/", jsonParser, async (req, res) => {
-    const yandexRequest = new YandexRequest(req.body.session.new,
-        req.body.request.nlu.intents,
-        req.body.state.session.value,
-        req.body.request.command
-    );
+    const yandexRequest = new YandexRequest(req);
 
-    const requestProcessorService = requestProcessorFabric.createProcessorService(yandexRequest);
+    const requestProcessorService = requestProcessorFactory.createProcessorService(yandexRequest);
     let response = await requestProcessorService.process(yandexRequest);
 
     res.send(response);

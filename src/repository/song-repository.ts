@@ -1,4 +1,5 @@
-import Song, {ISong} from "../model/song";
+import Song from "../model/song";
+import {ISong} from "../types/interfaces";
 
 export class SongRepository {
     async findOneByAlias(alias: string): Promise<ISong> {

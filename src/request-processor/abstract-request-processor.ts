@@ -1,10 +1,10 @@
-import {YandexRequest} from "../dto/yandex-request";
 import {SongRepository} from "../repository/song-repository";
 import pino from "pino";
-
-export interface IRequestProcessor {
-    process(yandexRequest: YandexRequest): Promise<any>;
-}
+import {YandexRequest} from "../model/yandex-request";
+import {IRequestProcessor} from "../types/interfaces";
+import {Button} from "../model/button";
+import {ButtonService} from "../service/button-service";
+import {ButtonTitleEnum} from "../types/enums";
 
 export abstract class AbstractRequestProcessor implements IRequestProcessor {
     private logger: any;
@@ -27,7 +27,7 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
     protected createResponse(
         text: string,
         tts: string = '',
-        buttons: Array<object> = [],
+        buttonTitles: string[] = [],
         sessionState: object = {},
         card: object = null
     ): object {
@@ -35,12 +35,14 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
             tts = text;
         }
 
+        let buttons = ButtonService.createButtons(buttonTitles);
+
         return {
             response: {
-                text: text,
-                tts: tts,
-                card: card,
-                buttons: buttons,
+                text,
+                tts,
+                card,
+                buttons,
                 end_session: false
             },
             session_state: {
@@ -51,20 +53,26 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
     }
 
     protected createInvalidResponse(yandexRequest: YandexRequest): any {
-        const text = this.getRandomElement([
+        this.logger.info(yandexRequest);
+
+        let variants = [
             'Простите, я вас не поняла',
             'Не могли бы повторить?',
-            'Кажется, мы говорим на ранзых языках'
-        ]);
+            'Кажется, мы говорим на разных языках',
+            'Будьте здоровы',
+            'Хз, это не ко мне'
+        ];
 
-        this.logger.info(yandexRequest);
+        if (yandexRequest.command.length < 10) {
+            variants.push('Что ещё за ' + yandexRequest.command + '?');
+        }
+
+        const text = this.getRandomElement(variants);
 
         return this.createResponse(
             text,
             '',
-            [
-                {title: 'Что ты умеешь?', hide: true}
-            ]
+            [ButtonTitleEnum.WHAT_CAN_YOU_DO]
         );
     }
 }

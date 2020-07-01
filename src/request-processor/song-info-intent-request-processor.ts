@@ -1,5 +1,6 @@
-import {YandexRequest} from "../dto/yandex-request";
 import {AbstractSongRequestProcessor} from "./abstract-request-processor";
+import {YandexRequest} from "../model/yandex-request";
+import {SongInfoTypeEnum} from "../types/enums";
 
 export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor {
     async process(yandexRequest: YandexRequest): Promise<any> {
@@ -17,9 +18,9 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
             || yandexRequest.intents.action.slots.action.value === 'song_text'
         ) {
             if (yandexRequest.intents.action.slots.action.value === 'song_chords') {
-                infoType = 'chords';
+                infoType = SongInfoTypeEnum.CHORDS;
             } else {
-                infoType = 'text';
+                infoType = SongInfoTypeEnum.TEXT;
             }
         }
 
@@ -27,12 +28,8 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
             return this.createInvalidResponse(yandexRequest);
         }
 
-        if (!alias) {
-            alias = sessionState.songAlias;
-        }
-        if (!infoType) {
-            infoType = sessionState.action === 'navigation' ? null : sessionState.infoType;
-        }
+        alias = alias || sessionState.songAlias;
+        infoType = infoType || sessionState.infoType;
 
         if (!alias) {
             return this.whichSong(infoType);
@@ -51,10 +48,7 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
 
         let buttons = [];
         for (let i = 0; i < songNames.length; i++) {
-            buttons.push({
-                title: songNames[i],
-                hide: true
-            });
+            buttons.push(songNames[i]);
         }
 
         return this.createResponse(
@@ -69,11 +63,11 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
 
     private whichInfoType(alias: string) {
         return this.createResponse(
-            'Что конкретно?',
+            'Аккорды или текст?',
             '',
             [
-                {title: 'Аккорды', hide: true},
-                {title: 'Текст', hide: true},
+                'Аккорды',
+                'Текст',
             ],
             {
                 songAlias: alias
@@ -82,21 +76,45 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
     }
 
     private async processSongInfo(alias: string, infoType: string) {
+        let responseText;
+        let tts;
+        let buttons = [
+            'Выбрать другую песню',
+        ];
+
         const song = await this.songRepository.findOneByAlias(alias);
 
-        if (infoType === 'chords') {
-            return this.createResponse(song.chords);
+        if (infoType === SongInfoTypeEnum.CHORDS) {
+            let chordsItem = song.chords[0];
+
+            if (song.chords.length === 1) {
+                responseText = chordsItem.chords;
+
+                let chordsCount = chordsItem.chords.split(' ').length;
+
+                if (chordsCount === 2) {
+                    tts = 'Это изи, ведь их тут всего 2. Как и в большинстве других песен. ' + responseText; 
+                } else if (chordsCount <= 5) {
+                    tts = 'Соберитесь, аккорды этой песни по пальцам одной руки не сосчитать. Если, конечно, вы черепашка-ниндзя. ' + responseText;
+                } else {
+                    tts = 'Уверены, что готовы? Тут нужно минимум год в консерватории, чтоб всё запомнить. ' + responseText;
+                }
+            } else {
+                responseText = `${chordsItem.type}: ${chordsItem.chords}`;
+                tts = 'Аккордов в этой песне столько, что я боюсь вываливать их на вас разом. Так что будем двигаться потихоньку. ' + responseText;
+                buttons.unshift('Дальше');
+            }
+        } else {
+            responseText = song.text[0];
+            buttons.unshift('Дальше');
         }
 
         return this.createResponse(
-            song.text[0],
-            '',
-            [
-                {title: 'Дальше', hide: true},
-            ],
+            responseText,
+            tts ? tts : responseText,
+            buttons,
             {
-                action: 'navigation',
-                infoType: 'text',
+                infoType: infoType,
                 songAlias: song.alias,
                 line: 0
             }

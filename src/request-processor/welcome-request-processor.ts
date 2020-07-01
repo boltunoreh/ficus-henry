@@ -1,5 +1,6 @@
-import {YandexRequest} from "../dto/yandex-request";
-import {AbstractRequestProcessor, IRequestProcessor} from "./abstract-request-processor";
+import {AbstractRequestProcessor} from "./abstract-request-processor";
+import {YandexRequest} from "../model/yandex-request";
+import {ButtonTitleEnum} from "../types/enums";
 
 export class WelcomeRequestProcessor extends AbstractRequestProcessor {
     process(yandexRequest: YandexRequest): any {
@@ -9,7 +10,7 @@ export class WelcomeRequestProcessor extends AbstractRequestProcessor {
             `${greeting}! Я - ваш виртуальный путеводитель по творчеству группы Фикус Генри. Если что-то нужно - только попросите.`,
             '',
             [
-                {title: 'Что ты умеешь?', hide: true},
+                ButtonTitleEnum.WHAT_CAN_YOU_DO,
             ]);
     }
 }
