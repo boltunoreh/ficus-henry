@@ -2,10 +2,10 @@ import {Button} from "../model/button";
 
 export class ButtonService {
     static createButtons(titles: string[]) {
-        let buttons = [];
+        const buttons = [];
 
-        for (let title of titles) {
-            buttons.push(new Button({title: title}))
+        for (const title of titles) {
+            buttons.push(new Button({title}))
         }
 
         return buttons;

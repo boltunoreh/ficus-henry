@@ -4,7 +4,7 @@ import {SongInfoTypeEnum} from "../types/enums";
 
 export class SongNavigationIntentRequestProcessor extends AbstractSongRequestProcessor {
     async process(yandexRequest: YandexRequest): Promise<any> {
-        let sessionState = yandexRequest.sessionState;
+        const sessionState = yandexRequest.sessionState;
         let songInfo;
 
         if (!sessionState.songAlias) {

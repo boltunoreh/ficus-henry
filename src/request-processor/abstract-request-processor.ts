@@ -2,7 +2,6 @@ import {SongRepository} from "../repository/song-repository";
 import pino from "pino";
 import {YandexRequest} from "../model/yandex-request";
 import {IRequestProcessor} from "../types/interfaces";
-import {Button} from "../model/button";
 import {ButtonService} from "../service/button-service";
 import {ButtonTitleEnum} from "../types/enums";
 
@@ -35,7 +34,7 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
             tts = text;
         }
 
-        let buttons = ButtonService.createButtons(buttonTitles);
+        const buttons = ButtonService.createButtons(buttonTitles);
 
         return {
             response: {
@@ -55,7 +54,7 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
     protected createInvalidResponse(yandexRequest: YandexRequest): any {
         this.logger.info(yandexRequest);
 
-        let variants = [
+        const variants = [
             'Простите, я вас не поняла',
             'Не могли бы повторить?',
             'Кажется, мы говорим на разных языках',

@@ -13,7 +13,7 @@ app.post("/", jsonParser, async (req, res) => {
     const yandexRequest = new YandexRequest(req);
 
     const requestProcessorService = requestProcessorFactory.createProcessorService(yandexRequest);
-    let response = await requestProcessorService.process(yandexRequest);
+    const response = await requestProcessorService.process(yandexRequest);
 
     res.send(response);
 });

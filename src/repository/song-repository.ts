@@ -6,7 +6,7 @@ export class SongRepository {
         return await Song.findOne({alias}).exec();
     }
 
-    async getAllSongNames(): Promise<Array<string>> {
+    async getAllSongNames(): Promise<string[]> {
         const songNames: string[] = [];
         const cursor = Song.find().cursor();
 

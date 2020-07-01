@@ -7,7 +7,7 @@ export class SongListIntentRequestProcessor extends AbstractSongRequestProcessor
         let sessionState = {};
         const songNames = await this.songRepository.getAllSongNames();
 
-        let buttons = [];
+        const buttons = [];
 
         for (let i = 0; i < songNames.length; i++) {
             buttons.push(songNames[i]);

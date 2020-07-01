@@ -4,7 +4,7 @@ import {SongInfoTypeEnum} from "../types/enums";
 
 export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor {
     async process(yandexRequest: YandexRequest): Promise<any> {
-        let sessionState = yandexRequest.sessionState;
+        const sessionState = yandexRequest.sessionState;
         let alias;
         let infoType;
 
@@ -44,9 +44,9 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
 
     private async whichSong(infoType: string) {
         const songNames = await this.songRepository.getAllSongNames();
-        let responseText = 'Для какой песни? ' + songNames.join(', ');
+        const responseText = 'Для какой песни? ' + songNames.join(', ');
 
-        let buttons = [];
+        const buttons = [];
         for (let i = 0; i < songNames.length; i++) {
             buttons.push(songNames[i]);
         }
@@ -56,7 +56,7 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
             '',
             buttons,
             {
-                infoType: infoType
+                infoType
             }
         );
     }
@@ -78,22 +78,22 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
     private async processSongInfo(alias: string, infoType: string) {
         let responseText;
         let tts;
-        let buttons = [
+        const buttons = [
             'Выбрать другую песню',
         ];
 
         const song = await this.songRepository.findOneByAlias(alias);
 
         if (infoType === SongInfoTypeEnum.CHORDS) {
-            let chordsItem = song.chords[0];
+            const chordsItem = song.chords[0];
 
             if (song.chords.length === 1) {
                 responseText = chordsItem.chords;
 
-                let chordsCount = chordsItem.chords.split(' ').length;
+                const chordsCount = chordsItem.chords.split(' ').length;
 
                 if (chordsCount === 2) {
-                    tts = 'Это изи, ведь их тут всего 2. Как и в большинстве других песен. ' + responseText; 
+                    tts = 'Это изи, ведь их тут всего 2. Как и в большинстве других песен. ' + responseText;
                 } else if (chordsCount <= 5) {
                     tts = 'Соберитесь, аккорды этой песни по пальцам одной руки не сосчитать. Если, конечно, вы черепашка-ниндзя. ' + responseText;
                 } else {
@@ -114,7 +114,7 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
             tts ? tts : responseText,
             buttons,
             {
-                infoType: infoType,
+                infoType,
                 songAlias: song.alias,
                 line: 0
             }
