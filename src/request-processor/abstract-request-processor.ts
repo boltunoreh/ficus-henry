@@ -28,7 +28,8 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
         text: string,
         tts: string = '',
         buttons: Array<object> = [],
-        sessionState: object = {}
+        sessionState: object = {},
+        card: object = null
     ): object {
         if (tts === '') {
             tts = text;
@@ -38,6 +39,7 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
             response: {
                 text: text,
                 tts: tts,
+                card: card,
                 buttons: buttons,
                 end_session: false
             },

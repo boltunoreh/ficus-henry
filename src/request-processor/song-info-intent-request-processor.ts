@@ -6,7 +6,7 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
         let sessionState = yandexRequest.sessionState;
         let alias;
         let infoType;
-        
+
         if (yandexRequest.intents.song_info) {
             alias = yandexRequest.intents.song_info.slots.alias.value;
 

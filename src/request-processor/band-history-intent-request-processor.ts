@@ -12,7 +12,16 @@ export class BandHistoryIntentRequestProcessor extends AbstractRequestProcessor 
                 {title: 'Зачитать текст', hide: true},
                 {title: 'История группы', hide: true},
                 {title: 'Афиша', hide: true},
-            ]
+            ],
+            {},
+            {
+                type: "BigImage",
+                image_id: '937455/92c4dbe60382f05e87f4',
+                title: "Instagram",
+                button: {
+                    url: "https://www.instagram.com/ficus.henry/"
+                }
+            }
         );
     }
 }

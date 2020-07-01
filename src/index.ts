@@ -12,6 +12,7 @@ Db.connect();
 /*
     todo show chords line by line
     todo add band photos 
+    todo add YandexResponse class 
  */
 
 app.post("/", jsonParser, async (req, res) => {
