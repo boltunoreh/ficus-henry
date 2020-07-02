@@ -1,13 +1,13 @@
 import { connect } from 'mongoose';
-import dbConfig from '../config/db.json';
+import {logger} from "./logger";
 
 export class Db {
     static connect() {
-        connect(dbConfig.url, (err: any) => {
+        const opts = { useNewUrlParser: true, useUnifiedTopology: true };
+
+        connect(process.env.DB_DSN, opts, (err: any) => {
             if (err) {
-                console.log(err.message);
-            } else {
-                console.log("Successfully Connected!");
+                logger.error(err.message);
             }
         });
     }

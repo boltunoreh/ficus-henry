@@ -19,7 +19,4 @@ app.post("/", jsonParser, async (req, res) => {
 });
 
 const port: number = Number(process.env.PORT) || 3000;
-app.listen(port, () => {
-    // tslint:disable-next-line:no-console
-    console.log(`Server started on http://localhost:${port}`);
-});
+app.listen(port);

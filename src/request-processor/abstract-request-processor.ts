@@ -1,19 +1,10 @@
-import {SongRepository} from "../repository/song-repository";
-import pino from "pino";
 import {YandexRequest} from "../model/yandex-request";
 import {IRequestProcessor} from "../types/interfaces";
 import {ButtonService} from "../service/button-service";
 import {ButtonTitleEnum} from "../types/enums";
+import {logger} from "../logger";
 
 export abstract class AbstractRequestProcessor implements IRequestProcessor {
-    private logger: any;
-
-    constructor() {
-        this.logger = pino({
-            name: 'ficus-henry',
-            level: "debug"
-        });
-    }
 
     abstract process(yandexRequest: YandexRequest): Promise<any>;
 
@@ -52,15 +43,19 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
     }
 
     protected createInvalidResponse(yandexRequest: YandexRequest): any {
-        this.logger.info(yandexRequest);
+        logger.warn('Invalid request command: ' + JSON.stringify(yandexRequest));
 
-        const variants = [
+        let variants = [
             'Простите, я вас не поняла',
             'Не могли бы повторить?',
             'Кажется, мы говорим на разных языках',
             'Будьте здоровы',
             'Хз, это не ко мне'
         ];
+
+        if (yandexRequest.sessionState.invalidRequestMessage) {
+            variants = variants.filter(val => val !== yandexRequest.sessionState.invalidRequestMessage);
+        }
 
         if (yandexRequest.command.length < 10) {
             variants.push('Что ещё за ' + yandexRequest.command + '?');
@@ -71,17 +66,10 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
         return this.createResponse(
             text,
             '',
-            [ButtonTitleEnum.WHAT_CAN_YOU_DO]
+            [ButtonTitleEnum.WHAT_CAN_YOU_DO],
+            {
+                invalidRequestMessage: text
+            }
         );
-    }
-}
-
-export abstract class AbstractSongRequestProcessor extends AbstractRequestProcessor {
-    protected songRepository: SongRepository;
-
-    constructor() {
-        super();
-
-        this.songRepository = new SongRepository();
     }
 }

@@ -1,6 +1,6 @@
-import {AbstractSongRequestProcessor} from "./abstract-request-processor";
 import {YandexRequest} from "../model/yandex-request";
 import {SongInfoTypeEnum} from "../types/enums";
+import {AbstractSongRequestProcessor} from "./abstract-song-request-processor";
 
 export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor {
     async process(yandexRequest: YandexRequest): Promise<any> {
@@ -47,8 +47,8 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
         const responseText = 'Для какой песни? ' + songNames.join(', ');
 
         const buttons = [];
-        for (let i = 0; i < songNames.length; i++) {
-            buttons.push(songNames[i]);
+        for (const songName of songNames) {
+            buttons.push(songName);
         }
 
         return this.createResponse(

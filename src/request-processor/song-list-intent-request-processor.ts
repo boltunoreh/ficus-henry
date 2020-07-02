@@ -1,6 +1,6 @@
-import {AbstractSongRequestProcessor} from "./abstract-request-processor";
 import {YandexRequest} from "../model/yandex-request";
 import {ButtonTitleEnum} from "../types/enums";
+import {AbstractSongRequestProcessor} from "./abstract-song-request-processor";
 
 export class SongListIntentRequestProcessor extends AbstractSongRequestProcessor {
     async process(yandexRequest: YandexRequest) {
@@ -9,8 +9,8 @@ export class SongListIntentRequestProcessor extends AbstractSongRequestProcessor
 
         const buttons = [];
 
-        for (let i = 0; i < songNames.length; i++) {
-            buttons.push(songNames[i]);
+        for (const songName of songNames) {
+            buttons.push(songName);
         }
 
         buttons.push(ButtonTitleEnum.SONG_CHORDS, ButtonTitleEnum.SONG_TEXT);
