@@ -5,11 +5,12 @@ import {AnswerService} from "../service/answer-service";
 
 export class SongNavigationIntentRequestProcessor extends AbstractSongRequestProcessor {
     async process(yandexRequest: YandexRequest): Promise<any> {
+        let responseText = '';
         const sessionState = yandexRequest.sessionState;
         let songInfo;
 
         if (!sessionState.songAlias) {
-            const responseText = AnswerService.getRestartAnswer();
+            responseText = AnswerService.getRestartAnswer();
 
             return this.createResponse(
                 responseText,
@@ -26,7 +27,6 @@ export class SongNavigationIntentRequestProcessor extends AbstractSongRequestPro
             songInfo = song.text;
         }
 
-        let responseText = '';
         let buttons = [
             ButtonTitleEnum.BACK,
             ButtonTitleEnum.FORWARD,

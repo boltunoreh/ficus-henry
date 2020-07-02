@@ -1,6 +1,17 @@
 import {YandexRequest} from "../model/yandex-request";
 
 export class AnswerService {
+    static getWelcomeAnswer(): string {
+        const greeting = this.getRandomElement([
+            'Привет',
+            'Здравствуйте',
+            'Здаров',
+            'День добрый',
+        ]);
+
+        return `${greeting}! Я - ваш виртуальный путеводитель по творчеству группы Фикус Генри. Если что-то нужно - только попросите.`
+    }
+
     static getInvalidRequestAnswer(yandexRequest: YandexRequest): string {
         let variants = [
             'Простите, я вас не поняла',
