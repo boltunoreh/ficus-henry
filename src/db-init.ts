@@ -5,7 +5,7 @@ export class Db {
     static connect() {
         const opts = { useNewUrlParser: true, useUnifiedTopology: true };
 
-        connect(process.env.DB_DSN, opts, (err: any) => {
+        connect(process.env.MONGODB_URI, opts, (err: any) => {
             if (err) {
                 logger.error(err.message);
             }
