@@ -19,6 +19,13 @@ export enum SongInfoTypeEnum {
     TEXT = 'text',
 }
 
+export enum SongNavigationIntentEnum {
+    NEXT = 'next',
+    PREVIOUS = 'previous',
+    REPEAT = 'repeat',
+    REPEAT_SONG = 'repeat_song',
+}
+
 export enum ButtonTitleEnum {
     SONG_LIST = 'Перечислить песни',
     SONG_CHORDS = 'Напомнить аккорды',
@@ -26,4 +33,9 @@ export enum ButtonTitleEnum {
     BAND_HISTORY = 'История группы',
     EVENTS = 'Афиша',
     WHAT_CAN_YOU_DO = 'Что ты умеешь?',
+    BACK = 'Назад',
+    FORWARD = 'Дальше',
+    REPEAT = 'Повторить',
+    CHOOSE_ANOTHER_SONG = 'Выбрать другую песню',
+    RESTART = 'Начать сначала',
 }

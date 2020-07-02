@@ -1,11 +1,14 @@
 import {AbstractRequestProcessor} from "./abstract-request-processor";
 import {YandexRequest} from "../model/yandex-request";
 import {ButtonTitleEnum} from "../types/enums";
+import {AnswerService} from "../service/answer-service";
 
 export class HelpIntentRequestProcessor extends AbstractRequestProcessor {
     process(yandexRequest: YandexRequest): any {
+        const responseText = AnswerService.getHelpAnswer();
+
         return this.createResponse(
-            'Я могу перечислить песни группы, напомнить аккорды, зачитать текст, рассказать историю группы или рассказать о ближайших мероприятиях.',
+            responseText,
             '',
             [
                 ButtonTitleEnum.SONG_LIST,

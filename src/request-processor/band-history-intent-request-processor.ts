@@ -2,11 +2,14 @@ import {AbstractRequestProcessor} from "./abstract-request-processor";
 import {YandexRequest} from "../model/yandex-request";
 import {ButtonTitleEnum} from "../types/enums";
 import {ButtonService} from "../service/button-service";
+import {AnswerService} from "../service/answer-service";
 
 export class BandHistoryIntentRequestProcessor extends AbstractRequestProcessor {
     process(yandexRequest: YandexRequest): any {
+        const responseText = AnswerService.getBandHistoryAnswer();
+
         return this.createResponse(
-            'Эта история стара как мир. В далеком 2019 собрались Илья-Шмилья, Андрей-Шмандрей, Павел-Шмавел и Алёна-Шмалёна поиграть на гитарах да постучать в барабаны. Так и играют с тех пор.',
+            responseText,
             '',
             [
                 ButtonTitleEnum.SONG_LIST,

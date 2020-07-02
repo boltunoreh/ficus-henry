@@ -1,6 +1,7 @@
 import {YandexRequest} from "../model/yandex-request";
-import {SongInfoTypeEnum} from "../types/enums";
+import {ButtonTitleEnum, SongInfoTypeEnum, SongNavigationIntentEnum} from "../types/enums";
 import {AbstractSongRequestProcessor} from "./abstract-song-request-processor";
+import {AnswerService} from "../service/answer-service";
 
 export class SongNavigationIntentRequestProcessor extends AbstractSongRequestProcessor {
     async process(yandexRequest: YandexRequest): Promise<any> {
@@ -8,10 +9,12 @@ export class SongNavigationIntentRequestProcessor extends AbstractSongRequestPro
         let songInfo;
 
         if (!sessionState.songAlias) {
+            const responseText = AnswerService.getRestartAnswer();
+
             return this.createResponse(
-                'Давайте начнем сначала?',
+                responseText,
                 '',
-                ['Что ты умеешь?']
+                [ButtonTitleEnum.WHAT_CAN_YOU_DO]
             );
         }
 
@@ -25,37 +28,39 @@ export class SongNavigationIntentRequestProcessor extends AbstractSongRequestPro
 
         let responseText = '';
         let buttons = [
-            'Назад',
-            'Дальше',
-            'Повторить',
-            'Выбрать другую песню'
+            ButtonTitleEnum.BACK,
+            ButtonTitleEnum.FORWARD,
+            ButtonTitleEnum.REPEAT,
+            ButtonTitleEnum.CHOOSE_ANOTHER_SONG,
         ];
 
         switch (yandexRequest.intents.song_navigation.slots.direction.value) {
-            case 'next':
+            case SongNavigationIntentEnum.NEXT:
                 if (songInfo.length <= sessionState.line + 1) {
-                    responseText = 'Дальше некуда. Повторить?';
+                    responseText = AnswerService.getEndOfSongAnswer();
+
                     buttons = [
-                        'Начать сначала',
-                        'Выбрать другую песню'
+                        ButtonTitleEnum.RESTART,
+                        ButtonTitleEnum.CHOOSE_ANOTHER_SONG,
                     ];
                 } else {
                     sessionState.line++;
                 }
                 break;
-            case 'previous':
+            case SongNavigationIntentEnum.PREVIOUS:
                 if (sessionState.line === 0) {
-                    responseText = 'Отступать некуда, но можно перейти к другим песням';
+                    responseText = AnswerService.getStartOfSongAnswer();
+
                     buttons = [
-                        'Выбрать другую песню',
+                        ButtonTitleEnum.CHOOSE_ANOTHER_SONG,
                     ];
                 } else {
                     sessionState.line--;
                 }
                 break;
-            case 'repeat':
+            case SongNavigationIntentEnum.REPEAT:
                 break;
-            case 'repeat_song':
+            case SongNavigationIntentEnum.REPEAT_SONG:
                 sessionState.line = 0;
                 break;
         }

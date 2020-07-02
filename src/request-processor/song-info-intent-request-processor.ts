@@ -1,6 +1,7 @@
 import {YandexRequest} from "../model/yandex-request";
 import {SongInfoTypeEnum} from "../types/enums";
 import {AbstractSongRequestProcessor} from "./abstract-song-request-processor";
+import {AnswerService} from "../service/answer-service";
 
 export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor {
     async process(yandexRequest: YandexRequest): Promise<any> {
@@ -44,7 +45,7 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
 
     private async whichSong(infoType: string) {
         const songNames = await this.songRepository.getAllSongNames();
-        const responseText = 'Для какой песни? ' + songNames.join(', ');
+        const responseText = AnswerService.getWhichSongAnswer(songNames);
 
         const buttons = [];
         for (const songName of songNames) {
@@ -62,8 +63,10 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
     }
 
     private whichInfoType(alias: string) {
+        const responseText = AnswerService.getWhichInfoTypeAnswer();
+
         return this.createResponse(
-            'Аккорды или текст?',
+            responseText,
             '',
             [
                 'Аккорды',
@@ -92,16 +95,10 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
 
                 const chordsCount = chordsItem.chords.split(' ').length;
 
-                if (chordsCount === 2) {
-                    tts = 'Это изи, ведь их тут всего 2. Как и в большинстве других песен. ' + responseText;
-                } else if (chordsCount <= 5) {
-                    tts = 'Соберитесь, аккорды этой песни по пальцам одной руки не сосчитать. Если, конечно, вы черепашка-ниндзя. ' + responseText;
-                } else {
-                    tts = 'Уверены, что готовы? Тут нужно минимум год в консерватории, чтоб всё запомнить. ' + responseText;
-                }
+                tts = AnswerService.getSimpleChordsTts(chordsCount, responseText);
             } else {
                 responseText = `${chordsItem.type}: ${chordsItem.chords}`;
-                tts = 'Аккордов в этой песне столько, что я боюсь вываливать их на вас разом. Так что будем двигаться потихоньку. ' + responseText;
+                tts = AnswerService.getComplexChordsTts(responseText);
                 buttons.unshift('Дальше');
             }
         } else {

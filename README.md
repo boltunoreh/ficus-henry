@@ -5,5 +5,5 @@
 #Todo
 - add YandexResponse class
 - randomize answers
-- add logging transport
 - refactor
+- implement some ioc

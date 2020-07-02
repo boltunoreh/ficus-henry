@@ -3,16 +3,11 @@ import {IRequestProcessor} from "../types/interfaces";
 import {ButtonService} from "../service/button-service";
 import {ButtonTitleEnum} from "../types/enums";
 import {logger} from "../logger";
+import {AnswerService} from "../service/answer-service";
 
 export abstract class AbstractRequestProcessor implements IRequestProcessor {
 
     abstract process(yandexRequest: YandexRequest): Promise<any>;
-
-    protected getRandomElement(arr: string[]) {
-        const index = Math.floor(Math.random() * arr.length);
-
-        return arr[index];
-    }
 
     protected createResponse(
         text: string,
@@ -45,30 +40,14 @@ export abstract class AbstractRequestProcessor implements IRequestProcessor {
     protected createInvalidResponse(yandexRequest: YandexRequest): any {
         logger.warn('Invalid request command: ' + JSON.stringify(yandexRequest));
 
-        let variants = [
-            'Простите, я вас не поняла',
-            'Не могли бы повторить?',
-            'Кажется, мы говорим на разных языках',
-            'Будьте здоровы',
-            'Хз, это не ко мне'
-        ];
-
-        if (yandexRequest.sessionState.invalidRequestMessage) {
-            variants = variants.filter(val => val !== yandexRequest.sessionState.invalidRequestMessage);
-        }
-
-        if (yandexRequest.command.length < 10) {
-            variants.push('Что ещё за ' + yandexRequest.command + '?');
-        }
-
-        const text = this.getRandomElement(variants);
+        const responseText = AnswerService.getInvalidRequestAnswer(yandexRequest);
 
         return this.createResponse(
-            text,
+            responseText,
             '',
             [ButtonTitleEnum.WHAT_CAN_YOU_DO],
             {
-                invalidRequestMessage: text
+                invalidRequestMessage: responseText
             }
         );
     }
