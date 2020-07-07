@@ -5,9 +5,9 @@ export class YandexRequest {
     command: string;
 
     constructor(data: any) {
-        this.isNew = data.body.session.new || false;
-        this.intents = data.body.request.nlu.intents || {};
-        this.sessionState = data.body.state.session.value || {};
-        this.command = data.body.request.command || '';
+        this.isNew = data.body.session?.new || false;
+        this.intents = data.body.request?.nlu?.intents || {};
+        this.sessionState = data.body.state?.session?.value || {};
+        this.command = data.body.request?.command || '';
     }
 }
