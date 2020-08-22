@@ -1,3 +1,6 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import express from 'express';
 import {Db} from './db-init';
 import {RequestProcessorFactory} from "./request-processor-factory";

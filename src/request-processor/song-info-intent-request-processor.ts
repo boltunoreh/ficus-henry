@@ -1,5 +1,5 @@
 import {YandexRequest} from "../model/yandex-request";
-import {SongInfoTypeEnum} from "../types/enums";
+import {ButtonTitleEnum, SongInfoTypeEnum} from "../types/enums";
 import {AbstractSongRequestProcessor} from "./abstract-song-request-processor";
 import {AnswerService} from "../service/answer-service";
 
@@ -82,7 +82,7 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
         let responseText;
         let tts;
         const buttons = [
-            'Выбрать другую песню',
+            ButtonTitleEnum.CHOOSE_ANOTHER_SONG,
         ];
 
         const song = await this.songRepository.findOneByAlias(alias);
@@ -99,11 +99,14 @@ export class SongInfoIntentRequestProcessor extends AbstractSongRequestProcessor
             } else {
                 responseText = `${chordsItem.type}: ${chordsItem.chords}`;
                 tts = AnswerService.getComplexChordsTts(responseText);
-                buttons.unshift('Дальше');
+                buttons.unshift(ButtonTitleEnum.FORWARD);
             }
-        } else {
+        } else if (infoType === SongInfoTypeEnum.TEXT) {
             responseText = song.text[0];
-            buttons.unshift('Дальше');
+            buttons.unshift(ButtonTitleEnum.FORWARD);
+            buttons.unshift(ButtonTitleEnum.FULL_TEXT);
+        } else if (infoType === SongInfoTypeEnum.FULL_TEXT) {
+            responseText = song.text.join('\n');
         }
 
         return this.createResponse(

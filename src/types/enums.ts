@@ -17,6 +17,7 @@ export enum ActionIntentEnum {
 export enum SongInfoTypeEnum {
     CHORDS = 'chords',
     TEXT = 'text',
+    FULL_TEXT = 'full_text',
 }
 
 export enum SongNavigationIntentEnum {
@@ -24,6 +25,7 @@ export enum SongNavigationIntentEnum {
     PREVIOUS = 'previous',
     REPEAT = 'repeat',
     REPEAT_SONG = 'repeat_song',
+    FULL_TEXT = 'full_text',
 }
 
 export enum ButtonTitleEnum {
@@ -38,4 +40,5 @@ export enum ButtonTitleEnum {
     REPEAT = 'Повторить',
     CHOOSE_ANOTHER_SONG = 'Выбрать другую песню',
     RESTART = 'Начать сначала',
+    FULL_TEXT = 'Покажи весь текст',
 }

@@ -31,8 +31,14 @@ export class SongNavigationIntentRequestProcessor extends AbstractSongRequestPro
             ButtonTitleEnum.BACK,
             ButtonTitleEnum.FORWARD,
             ButtonTitleEnum.REPEAT,
-            ButtonTitleEnum.CHOOSE_ANOTHER_SONG,
         ];
+
+        if (yandexRequest.sessionState.infoType === SongInfoTypeEnum.TEXT
+            && yandexRequest.intents.song_navigation.slots.direction.value !== SongNavigationIntentEnum.FULL_TEXT) {
+            buttons.unshift(ButtonTitleEnum.FULL_TEXT);
+        }
+
+        buttons.unshift(ButtonTitleEnum.CHOOSE_ANOTHER_SONG);
 
         switch (yandexRequest.intents.song_navigation.slots.direction.value) {
             case SongNavigationIntentEnum.NEXT:
@@ -63,17 +69,22 @@ export class SongNavigationIntentRequestProcessor extends AbstractSongRequestPro
             case SongNavigationIntentEnum.REPEAT_SONG:
                 sessionState.line = 0;
                 break;
+            case SongNavigationIntentEnum.FULL_TEXT:
+                responseText = song.text.join('\n');
+                break;
         }
 
         if (responseText === '') {
-            if (yandexRequest.sessionState.infoType === SongInfoTypeEnum.TEXT) {
-                responseText = song.text[sessionState.line];
-            } else {
+            if (yandexRequest.sessionState.infoType === SongInfoTypeEnum.CHORDS) {
                 if (song.chords.length === 1) {
                     responseText = song.chords[sessionState.line].chords;
                 } else {
                     responseText = `${song.chords[sessionState.line].type}: ${song.chords[sessionState.line].chords}`;
                 }
+            } else if (yandexRequest.sessionState.infoType === SongInfoTypeEnum.TEXT) {
+                responseText = song.text[sessionState.line];
+            } else if (yandexRequest.sessionState.infoType === SongInfoTypeEnum.FULL_TEXT) {
+                responseText = song.text.join('\n');
             }
         }
 
